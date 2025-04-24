@@ -16,10 +16,10 @@ import java.util.List;
 @Controller
 public class TicketController {
     private final SessionStorage sessionStorage;
-    public DataStorage dataStorage;
+    public final TicketRepo ticketRepo;
 
-    public TicketController(DataStorage dataStorage, SessionStorage sessionStorage) {
-        this.dataStorage = dataStorage;
+    public TicketController(TicketRepo ticketRepo, SessionStorage sessionStorage) {
+        this.ticketRepo = ticketRepo;
         this.sessionStorage = sessionStorage;
     }
 
@@ -29,8 +29,8 @@ public class TicketController {
             return "redirect:/";
         }
 
-        model.addAttribute("tickets", dataStorage.getTickets());
-        model.addAttribute("dateFormat", dataStorage.getDateFormat());
+        model.addAttribute("tickets", ticketRepo.findAll());
+        model.addAttribute("dateFormat", ticketRepo.getDateFormat());
         return "tickets/index";
     }
 
@@ -40,15 +40,15 @@ public class TicketController {
             return "redirect:/";
         }
 
-        Ticket ticket = dataStorage.getTicket(tixNum);
+        Ticket ticket = ticketRepo.getTicket(tixNum);
         if(ticket == null) {
             return "redirect:/tickets";
         }
-        List<Comment> comments = dataStorage.getComments(tixNum);
+        List<Comment> comments = ticketRepo.findAll(tixNum);
 
         model.addAttribute("ticket", ticket);
         model.addAttribute("comments", comments);
-        model.addAttribute("dateFormat", dataStorage.getDateFormat());
+        model.addAttribute("dateFormat", ticketRepo.findAll());
         return "tickets/view";
     }
 
@@ -59,17 +59,17 @@ public class TicketController {
         if(!sessionStorage.isLoggedIn()) {
             return "redirect:/";
         }
-        User user = sessionStorage.getUser();
+        User user = sessionStorage.findAll();
 
-        Ticket ticket = dataStorage.getTicket(tixNum);
+        Ticket ticket = ticketRepo.findAll(tixNum);
         if(ticket == null) {
             return "redirect:/tickets";
         }
 
         Comment newComment = new Comment(user, comments, ticket, new Date());
-        dataStorage.addCommentToTicket(tixNum, newComment);
-        model.addAttribute("ticket", dataStorage.getTicket(tixNum));
-        model.addAttribute("comments", dataStorage.getComments());
+        ticketRepo.addCommentToTicket(tixNum, newComment);
+        model.addAttribute("ticket", ticketRepo.findAll(tixNum));
+        model.addAttribute("comments", ticketRepo.findAll());
         return "redirect:/tickets/" + tixNum;
     }
 
@@ -100,9 +100,9 @@ public class TicketController {
         User requester = sessionStorage.getUser();
         model.addAttribute("requester", requester);
 
-        Ticket newTicket = new Ticket(dataStorage.getNextTixNum(), category, subject, details, "Open", new Date(), requester, null);
+        Ticket newTicket = new Ticket(ticketRepo.getNextTixNum(), category, subject, details, "Open", new Date(), requester, null);
 
-        dataStorage.add(newTicket);
+        ticketRepo.save(newTicket);
         return "redirect:/tickets";
     }
 }
