@@ -5,4 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TicketRepo extends CrudRepository<Ticket, Integer> {
 
+    Object getDateFormat();
+
+    Object findAll(int tixNum);
 }

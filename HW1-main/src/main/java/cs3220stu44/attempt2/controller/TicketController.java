@@ -5,6 +5,8 @@ import cs3220stu44.attempt2.SessionStorage;
 import cs3220stu44.attempt2.model.Comment;
 import cs3220stu44.attempt2.model.Ticket;
 import cs3220stu44.attempt2.model.User;
+import cs3220stu44.attempt2.repository.CommentRepo;
+import cs3220stu44.attempt2.repository.TicketRepo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,13 @@ import java.util.List;
 @Controller
 public class TicketController {
     private final SessionStorage sessionStorage;
-    public final TicketRepo ticketRepo;
+    private final TicketRepo ticketRepo;
+    private final CommentRepo commentRepo;
 
-    public TicketController(TicketRepo ticketRepo, SessionStorage sessionStorage) {
+    public TicketController(TicketRepo ticketRepo, SessionStorage sessionStorage, CommentRepo commentRepo) {
         this.ticketRepo = ticketRepo;
         this.sessionStorage = sessionStorage;
+        this.commentRepo = commentRepo;
     }
 
     @RequestMapping("/tickets")
@@ -40,11 +44,11 @@ public class TicketController {
             return "redirect:/";
         }
 
-        Ticket ticket = ticketRepo.getTicket(tixNum);
+        Ticket ticket = (Ticket) ticketRepo.findAll(tixNum);
         if(ticket == null) {
             return "redirect:/tickets";
         }
-        List<Comment> comments = ticketRepo.findAll(tixNum);
+        List<Comment> comments = commentRepo.findById(tixNum);
 
         model.addAttribute("ticket", ticket);
         model.addAttribute("comments", comments);
@@ -59,16 +63,16 @@ public class TicketController {
         if(!sessionStorage.isLoggedIn()) {
             return "redirect:/";
         }
-        User user = sessionStorage.findAll();
+        User user = sessionStorage.getUser();
 
-        Ticket ticket = ticketRepo.findAll(tixNum);
+        Ticket ticket = ticketRepo.findById(tixNum);
         if(ticket == null) {
             return "redirect:/tickets";
         }
 
         Comment newComment = new Comment(user, comments, ticket, new Date());
         ticketRepo.addCommentToTicket(tixNum, newComment);
-        model.addAttribute("ticket", ticketRepo.findAll(tixNum));
+        model.addAttribute("ticket", ticketRepo.findById(tixNum));
         model.addAttribute("comments", ticketRepo.findAll());
         return "redirect:/tickets/" + tixNum;
     }
