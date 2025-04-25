@@ -22,9 +22,9 @@ public class DataStorage {
         users = new ArrayList<>();
         tickets = new ArrayList<>();
 
-        User josh = new User(0, "Josh", "josh@example.com", "abcd", false);
-        User eva = new User(1, "Eva", "eva@example.com","abcd", false);
-        User john = new User(2, "John", "john@example.com","abcd", true);
+        User josh = new User("Josh", "josh@example.com", "abcd", false);
+        User eva = new User("Eva", "eva@example.com","abcd", false);
+        User john = new User("John", "john@example.com","abcd", true);
 
         users.add(josh);
         users.add(eva);
@@ -35,8 +35,8 @@ public class DataStorage {
 
         Date date = cal.getTime();
 
-        tickets.add(new Ticket(tixNum, "Software", "Tomcat on CS3 stopped", "Crash", "Open", date, josh, null));
-        tickets.add(new Ticket(tixNum, "hardware", "Printer problem in ECST mailroom", "No color", "Closed", date, eva, john));
+        tickets.add(new Ticket("Software", "Tomcat on CS3 stopped", "Crash", "Open", date, josh, null));
+        tickets.add(new Ticket("hardware", "Printer problem in ECST mailroom", "No color", "Closed", date, eva, john));
 
         comments = new ArrayList<>();
         comments.add(new Comment(josh, "this is urgent!", tickets.get(0), date));

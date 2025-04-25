@@ -30,12 +30,12 @@ public class TicketController {
     public void initializeData() {
         if (userRepo.count() == 0) {
             // Create regular users
-            User josh = new User(0, "Josh", "josh@example.com", "abcd", false);
-            User eva = new User(1, "Eva", "eva@example.com","abcd", false);
+            User josh = new User("Josh", "josh@example.com", "abcd", false);
+            User eva = new User("Eva", "eva@example.com","abcd", false);
 
             // Create technicians
-            User john = new User(2, "John", "john@example.com","abcd", true);
-            User jane = new User(3, "Jane", "jane@example.com", "abcd",  true);
+            User john = new User("John", "john@example.com","abcd", true);
+            User jane = new User("Jane", "jane@example.com", "abcd",  true);
 
             Calendar cal  = Calendar.getInstance();
             cal.set(2025, 2, 13);
@@ -49,8 +49,8 @@ public class TicketController {
 
             // Create sample tickets
             int tixNum = ticketRepo.getNextTixNum();
-            ticketRepo.save(new Ticket(tixNum, "Software", "Tomcat on CS3 stopped", "Crash", "Open", date, josh, null));
-            ticketRepo.save(new Ticket(tixNum, "hardware", "Printer problem in ECST mailroom", "No color", "Closed", date, eva, john));
+            ticketRepo.save(new Ticket("Software", "Tomcat on CS3 stopped", "Crash", "Open", date, josh, null));
+            ticketRepo.save(new Ticket("hardware", "Printer problem in ECST mailroom", "No color", "Closed", date, eva, john));
         }
 
     }
@@ -91,7 +91,7 @@ public class TicketController {
         Optional<User> assignee = userRepo.findById(assigneeId);
         if(assignee.isEmpty()) return "redirect:/tickets/create";
 
-        ticketRepo.save(new Ticket(ticketRepo.getNextTixNum(), category, subject, details, "Open", new Date(), requester, assignee.get()));
+        ticketRepo.save(new Ticket(category, subject, details, "Open", new Date(), requester, assignee.get()));
         return "redirect:/tickets";
     }
 

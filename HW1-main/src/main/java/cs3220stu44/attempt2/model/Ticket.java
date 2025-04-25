@@ -11,13 +11,12 @@ import jakarta.persistence.*;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private static int next = 1;
+
     private int tixNum;
     private String category;
     private String subject;
     private String details;
 
-    @Enumerated(EnumType.STRING)
     private String status;
 
     public enum Status {
@@ -44,8 +43,7 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Ticket(int tixNum, String category, String subject, String details, String status, Date submitDate, User requester, User assignee) {
-        this.tixNum = next++;
+    public Ticket(String category, String subject, String details, String status, Date submitDate, User requester, User assignee) {
         this.category = category;
         this.subject = subject;
         this.details = details;

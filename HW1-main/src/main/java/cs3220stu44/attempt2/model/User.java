@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private static int next = 1;
     private int id;
     private String name;
     private String email;
@@ -15,8 +14,7 @@ public class User {
 
     public User() {}
 
-    public User(int id, String name, String email, String password, boolean technician) {
-        this.id = next++;
+    public User(String name, String email, String password, boolean technician) {
         this.name = name;
         this.email = email;
         this.password = password;
