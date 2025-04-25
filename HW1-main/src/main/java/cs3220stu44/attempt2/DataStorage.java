@@ -22,9 +22,9 @@ public class DataStorage {
         users = new ArrayList<>();
         tickets = new ArrayList<>();
 
-        User josh = new User(0, "Josh", "josh@example.com", "abcd");
-        User eva = new User(1, "Eva", "eva@example.com","abcd");
-        User john = new User(2, "John", "john@example.com","abcd");
+        User josh = new User(0, "Josh", "josh@example.com", "abcd", false);
+        User eva = new User(1, "Eva", "eva@example.com","abcd", false);
+        User john = new User(2, "John", "john@example.com","abcd", true);
 
         users.add(josh);
         users.add(eva);

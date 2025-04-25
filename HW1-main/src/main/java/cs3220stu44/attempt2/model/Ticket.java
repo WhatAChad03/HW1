@@ -1,9 +1,13 @@
 package cs3220stu44.attempt2.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "tickets")
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +18,7 @@ public class Ticket {
     private String details;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private String status;
 
     public enum Status {
         OPEN, ASSIGNED, CLOSED
@@ -23,13 +27,22 @@ public class Ticket {
     @ManyToOne
     private User assignedTechnician;
 
+    @Column(name = "date_submitted")
     private Date submitDate;
 
     @ManyToOne
+    @JoinColumn(name = "requester_id")
     private User requester;
+
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private User assignee;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ticket_id")
+    private List<Comment> comments = new ArrayList<>();
+
+    public Ticket() {}
 
     public Ticket(int tixNum, String category, String subject, String details, String status, Date submitDate, User requester, User assignee) {
         this.tixNum = next++;
@@ -73,20 +86,12 @@ public class Ticket {
         this.details = details;
     }
 
-//    public String getStatus() {
-//        return status;
-//    }
-//
-//    public void setStatus(String status) {
-//        this.status = status;
-//    }
-
-    public Date getSubmitDate() {
-        return submitDate;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSubmitDate(Date submitDate) {
-        this.submitDate = submitDate;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public User getRequester() {
@@ -104,5 +109,32 @@ public class Ticket {
     public void setAssignee(User assignee) {
         this.assignee = assignee;
     }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void addComment(Comment comment) {}
+
+    public boolean isClosed() {
+        return "Closed".equalsIgnoreCase(status);
+    }
+
+    public boolean isOpen() {
+        return !isClosed();
+    }
+
+    public Date getSubmitDate() {
+        return submitDate;
+    }
+
+    public void setSubmitDate(Date submitDate) {
+        this.submitDate = submitDate;
+    }
+
 }
 

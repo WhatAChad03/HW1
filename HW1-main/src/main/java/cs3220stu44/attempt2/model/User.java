@@ -11,21 +11,20 @@ public class User {
     private String email;
     private String phone;
     private String password;
+    private boolean technician;
 
-    public User(int id, String name, String email, String password) {
+    public User() {}
+
+    public User(int id, String name, String email, String password, boolean technician) {
         this.id = next++;
         this.name = name;
         this.email = email;
-        this.phone = phone;
         this.password = password;
+        this.technician = technician;
     }
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
 
-    public enum Role {
-        USER, TECHNICIAN
-    }
+
 
     public int getId() {
         return id;
@@ -51,19 +50,20 @@ public class User {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isTechnician() {
+        return technician;
+    }
+
+    public void setTechnician(boolean technician) {
+        this.technician = technician;
     }
 }
 

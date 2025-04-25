@@ -3,19 +3,22 @@ package cs3220stu44.attempt2.controller;
 import cs3220stu44.attempt2.DataStorage;
 import cs3220stu44.attempt2.SessionStorage;
 import cs3220stu44.attempt2.model.User;
+import cs3220stu44.attempt2.repository.UserRepo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 @Controller
 public class AuthController {
-    private final DataStorage dataStorage;
+    private final UserRepo userRepo;
     private final SessionStorage sessionStorage;
 
-    public AuthController(DataStorage dataStorage, SessionStorage sessionStorage) {
-        this.dataStorage = dataStorage;
+    public AuthController(UserRepo userRepo, SessionStorage sessionStorage) {
+        this.userRepo = userRepo;
         this.sessionStorage = sessionStorage;
     }
 
@@ -31,14 +34,22 @@ public class AuthController {
     public String loginSubmit(@RequestParam String email,
                               @RequestParam String password,
                               Model model) {
-        User user = dataStorage.authenticate(email, password);
-        if (user != null) {
-            sessionStorage.setUser(user);
-            sessionStorage.setLoggedIn(true);
-            return "redirect:/tickets";
-        } else {
-            return "redirect:/login?error";
+        if (sessionStorage.isLoggedIn()) {
+            return "redirect:/";
         }
+
+        Optional<User> userRepoByEmail = userRepo.findByEmail(email);
+        if (userRepoByEmail.isEmpty()) {
+            return "redirect:/";
+        }
+
+        User user = userRepoByEmail.get();
+        if (!user.getPassword().equals(password)) {
+            return "redirect:/";
+        }
+        sessionStorage.setUser(user);
+
+        return "redirect:/tickets";
     }
 
     @GetMapping("/logout")

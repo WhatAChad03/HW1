@@ -1,5 +1,7 @@
 @import cs3220stu44.attempt2.model.User
+@import java.util.List
 @param User currentUser
+@param List<User> availableTechnicians
 
 <!doctype html>
 <html lang="en">
@@ -68,12 +70,13 @@
 <%--create form--%>
 <form class="row g-3" action="/tickets/create" method="post">
     <div class="col-lg-4">
-        <div class="col-md-11">
-            <label for="inputName" class="form-label">Name: </label>
-            <input type="text" class="form-control" id="inputName"
-                   name="requesterName"
-                   value="${currentUser.getName()}"
-                   readonly>
+        <div class="mb-3">
+            <label for="assignee" class="form-label">Assign To</label>
+            <select class="form-select" id="assignee" name="assigneeId">
+                @for(User tech : availableTechnicians)
+                    <option value="${tech.getId()}">${tech.getName()}</option>
+                @endfor
+            </select>
         </div>
 
         <div class="col-md-11">
@@ -83,14 +86,7 @@
                    value="${currentUser.getEmail()}"
                    readonly>
         </div>
-
-        <div class="col-md-11">
-            <label for="inputPhone" class="form-label">Phone</label>
-            <input type="tel" class="form-control" id="inputPhone"
-                   name="requesterPhone"
-                   value="${currentUser.getPhone()}"
-                   readonly>
-        </div>
+        
     </div>
 
     <div class="col-lg-8">
