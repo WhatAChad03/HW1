@@ -1,6 +1,5 @@
 package cs3220stu44.attempt2.controller;
 
-import cs3220stu44.attempt2.DataStorage;
 import cs3220stu44.attempt2.SessionStorage;
 import cs3220stu44.attempt2.model.User;
 import cs3220stu44.attempt2.repository.UserRepo;

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 
@@ -48,9 +50,8 @@ public class TicketController {
             userRepo.save(jane);
 
             // Create sample tickets
-            int tixNum = ticketRepo.getNextTixNum();
-            ticketRepo.save(new Ticket("Software", "Tomcat on CS3 stopped", "Crash", "Open", date, josh, null));
-            ticketRepo.save(new Ticket("hardware", "Printer problem in ECST mailroom", "No color", "Closed", date, eva, john));
+            ticketRepo.save(new Ticket("Software", "Tomcat on CS3 stopped", "Crash", "Open", LocalDateTime.now(), josh, null));
+            ticketRepo.save(new Ticket("hardware", "Printer problem in ECST mailroom", "No color", "Closed", LocalDateTime.now(), eva, john));
         }
 
     }
@@ -63,7 +64,7 @@ public class TicketController {
 
         model.addAttribute("tickets", ticketRepo.findAll());
         model.addAttribute("currentUser", sessionStorage.getUser());
-        model.addAttribute("dateFormat", ticketRepo.getDateFormat());
+        model.addAttribute("dateFormat",  DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return "tickets/index";
     }
 
@@ -91,7 +92,7 @@ public class TicketController {
         Optional<User> assignee = userRepo.findById(assigneeId);
         if(assignee.isEmpty()) return "redirect:/tickets/create";
 
-        ticketRepo.save(new Ticket(category, subject, details, "Open", new Date(), requester, assignee.get()));
+        ticketRepo.save(new Ticket(category, subject, details, "Open", LocalDateTime.now(), requester, assignee.get()));
         return "redirect:/tickets";
     }
 

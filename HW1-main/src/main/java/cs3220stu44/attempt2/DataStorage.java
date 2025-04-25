@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import cs3220stu44.attempt2.model.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,8 +36,8 @@ public class DataStorage {
 
         Date date = cal.getTime();
 
-        tickets.add(new Ticket("Software", "Tomcat on CS3 stopped", "Crash", "Open", date, josh, null));
-        tickets.add(new Ticket("hardware", "Printer problem in ECST mailroom", "No color", "Closed", date, eva, john));
+        tickets.add(new Ticket("Software", "Tomcat on CS3 stopped", "Crash", "Open", LocalDateTime.now(), josh, null));
+        tickets.add(new Ticket("hardware", "Printer problem in ECST mailroom", "No color", "Closed", LocalDateTime.now(), eva, john));
 
         comments = new ArrayList<>();
         comments.add(new Comment(josh, "this is urgent!", tickets.get(0), date));

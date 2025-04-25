@@ -1,5 +1,6 @@
 package cs3220stu44.attempt2.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,23 +12,19 @@ import jakarta.persistence.*;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private int tixNum;
+
     private String category;
     private String subject;
     private String details;
-
     private String status;
 
     public enum Status {
         OPEN, ASSIGNED, CLOSED
     }
 
-    @ManyToOne
-    private User assignedTechnician;
-
     @Column(name = "date_submitted")
-    private Date submitDate;
+    private LocalDateTime submitDate;
 
     @ManyToOne
     @JoinColumn(name = "requester_id")
@@ -43,10 +40,11 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Ticket(String category, String subject, String details, String status, Date submitDate, User requester, User assignee) {
+    public Ticket(String category, String subject, String details, String status, LocalDateTime submitDate, User requester, User assignee) {
         this.category = category;
         this.subject = subject;
         this.details = details;
+        this.status = status;
         this.submitDate = submitDate;
         this.requester = requester;
         this.assignee = assignee;
@@ -116,7 +114,7 @@ public class Ticket {
         this.comments = comments;
     }
 
-    public void addComment(Comment comment) {}
+    public void addComment(Comment comment) { this.comments.add(comment); }
 
     public boolean isClosed() {
         return "Closed".equalsIgnoreCase(status);
@@ -126,11 +124,11 @@ public class Ticket {
         return !isClosed();
     }
 
-    public Date getSubmitDate() {
+    public LocalDateTime getSubmitDate() {
         return submitDate;
     }
 
-    public void setSubmitDate(Date submitDate) {
+    public void setSubmitDate(LocalDateTime submitDate) {
         this.submitDate = submitDate;
     }
 

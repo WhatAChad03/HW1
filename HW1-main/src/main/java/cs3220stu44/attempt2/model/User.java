@@ -6,9 +6,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
     private String email;
-    private String phone;
     private String password;
     private boolean technician;
 
@@ -20,9 +20,6 @@ public class User {
         this.password = password;
         this.technician = technician;
     }
-
-
-
 
     public int getId() {
         return id;
