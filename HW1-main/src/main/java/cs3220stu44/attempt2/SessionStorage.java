@@ -12,9 +12,14 @@ public class SessionStorage {
     private boolean loggedIn;
 
     public User getUser() {return currentUser;}
-    public void setUser(User currentUser) {this.currentUser = currentUser;}
+
+    public void setUser(User currentUser) {
+        this.currentUser = currentUser;
+        this.loggedIn = true;
+    }
+
     public boolean isLoggedIn() {return loggedIn;}
-    public void setLoggedIn(boolean loggedIn) {this.loggedIn = loggedIn;}
+
     public void logout() {
         this.currentUser = null;
         this.loggedIn = false;

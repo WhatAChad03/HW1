@@ -64,7 +64,8 @@ public class TicketController {
 
         model.addAttribute("tickets", ticketRepo.findAll());
         model.addAttribute("currentUser", sessionStorage.getUser());
-        model.addAttribute("dateFormat",  DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        model.addAttribute("dateFormat", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
         return "tickets/index";
     }
 
@@ -73,7 +74,9 @@ public class TicketController {
         if(!sessionStorage.isLoggedIn()) {
             return "redirect:/";
         }
-        List<User> availableTechnicians = userRepo.findByTechnicianTrue();
+        List<User> availableTechnicians = userRepo.findByTechnicianTrue();  // Get technicians
+        Object currentUser = null;
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("availableTechnicians", availableTechnicians);
         return "tickets/create";
     }
@@ -109,11 +112,18 @@ public class TicketController {
 
         User sessionUser = sessionStorage.getUser();
         List<User> availableTechnicians = userRepo.findByTechnicianTrue();
+        List<Comment> comments = ticket.get().getComments();  // Assuming `Ticket` has a `getComments()` method
+
+        // Add logic to check if the current user is a technician and the ticket is not closed
+        boolean showCloseButton = sessionUser.isTechnician() && !"Closed".equalsIgnoreCase(ticket.get().getStatus());
 
         model.addAttribute("ticket", ticket.get());
+        model.addAttribute("comments", comments);  // Pass the comments to the template
         model.addAttribute("sessionUser", sessionUser);
         model.addAttribute("availableTechnicians", availableTechnicians);
-        model.addAttribute("dateFormat", ticketRepo.findAll());
+        model.addAttribute("dateFormat", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        model.addAttribute("showCloseButton", showCloseButton);  // Add the boolean for the button visibility
+
         return "tickets/view";
     }
 
@@ -131,8 +141,8 @@ public class TicketController {
         }
 
         Ticket ticket = optionalTicket.get();
-        if (ticket.isClosed()) {
-            return "redirect:/tickets/" + tixNum;
+        if (ticket.getStatus().equals("Closed")) {
+            return "redirect:/tickets/" + tixNum;  // No comments can be added to closed tickets
         }
 
         User sessionUser = sessionStorage.getUser();
@@ -151,11 +161,20 @@ public class TicketController {
             return "redirect:/";
         }
 
+        User sessionUser = sessionStorage.getUser();
+        if (!sessionUser.isTechnician()) {  // Ensure only technicians can assign technicians
+            return "redirect:/tickets/" + tixNum;  // Redirect if not a technician
+        }
+
         Optional<User> optionalTechnician = userRepo.findById(assigneeId);
-        if(optionalTechnician.isEmpty()) return "redirect:/tickets/" + tixNum;
+        if (optionalTechnician.isEmpty()) {
+            return "redirect:/tickets/" + tixNum;
+        }
 
         Optional<Ticket> optionalTicket = ticketRepo.findById(tixNum);
-        if(optionalTicket.isEmpty()) return "redirect:/tickets";
+        if (optionalTicket.isEmpty()) {
+            return "redirect:/tickets";
+        }
 
         Ticket ticket = optionalTicket.get();
         ticket.setAssignee(optionalTechnician.get());
@@ -165,18 +184,29 @@ public class TicketController {
 
     @GetMapping("/tickets/{tixNum}/close")
     public String closeTicket(@PathVariable int tixNum) {
-        if(!sessionStorage.isLoggedIn()) {
+        if (!sessionStorage.isLoggedIn()) {
             return "redirect:/";
         }
 
+        User sessionUser = sessionStorage.getUser();
+        if (!sessionUser.isTechnician()) {  // Ensure only technicians can close tickets
+            return "redirect:/tickets/" + tixNum;  // Redirect if not a technician
+        }
+
         Optional<Ticket> optionalTicket = ticketRepo.findById(tixNum);
-        if(optionalTicket.isEmpty()) return "redirect:/tickets";
+        if (optionalTicket.isEmpty()) {
+            return "redirect:/tickets";
+        }
 
         Ticket ticket = optionalTicket.get();
-        ticket.setStatus("Closed");
-        ticketRepo.save(ticket);
+        // Only allow closing if the ticket is not already closed
+        if (!ticket.getStatus().equals("Closed")) {
+            ticket.setStatus("Closed");
+            ticketRepo.save(ticket);
+        }
         return "redirect:/tickets/" + tixNum;
     }
+
 
     //show create form
 //    @GetMapping("/tickets/create")

@@ -1,11 +1,12 @@
 @import cs3220stu44.attempt2.model.Ticket
 @import cs3220stu44.attempt2.model.Comment
-@import cs3220stu44.attempt2.DataStorage
 @import java.util.List
-@param DataStorage dataStorage
-@param java.text.SimpleDateFormat dateFormat
+@param java.time.format.DateTimeFormatter dateFormat
 @param Ticket ticket
 @param List<Comment> comments
+@param boolean showCloseButton
+@param cs3220stu44.attempt2.model.User sessionUser
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -148,19 +149,28 @@
 
 <div class="container-sm card mb-4">
     <div class="card-body">
-        <form method="post" action="/tickets/${ticket.getTixNum()}/comments">
-            <div class="mb-3">
-                <label for="commentText" class="form-label text-white">
-                    Add Comment
-                </label>
-                <textarea class="form-control" id="commentText"
-                          name="comments"
-                          rows="3"
-                          required
-                ></textarea>
+        @if ("Closed".equalsIgnoreCase(ticket.getStatus()))
+            <div class="alert alert-secondary" role="alert">
+                <p>This ticket is closed. No further comments can be added.</p>
+
             </div>
-            <button type="submit" class="btn btn-primary">Submit Comment</button>
-        </form>
+        @else
+            <form method="post" action="/tickets/${ticket.getTixNum()}/comments">
+                <div class="mb-3">
+                    <label for="commentText" class="form-label">Add Comment</label>
+                    <textarea class="form-control" id="commentText" name="comments" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Comment</button>
+            </form>
+        @endif
+
+        @if (showCloseButton) {
+            <form action="/tickets/${ticket.getTixNum()}/close" method="get">
+                <button type="submit" class="btn btn-danger">Close Ticket</button>
+            </form>
+            } @endif
+
+
     </div>
 </div>
 

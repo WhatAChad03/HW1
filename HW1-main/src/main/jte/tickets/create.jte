@@ -73,20 +73,24 @@
         <div class="mb-3">
             <label for="assignee" class="form-label">Assign To</label>
             <select class="form-select" id="assignee" name="assigneeId">
-                @for(User tech : availableTechnicians)
-                    <option value="${tech.getId()}">${tech.getName()}</option>
-                @endfor
+                @if(availableTechnicians != null && !availableTechnicians.isEmpty())
+                    @for(User tech : availableTechnicians)
+                        <option value="${tech.getId()}">${tech.getName()}</option>
+                    @endfor
+                @else
+                    <option>No technicians available</option>
+                @endif
             </select>
         </div>
 
-        <div class="col-md-11">
-            <label for="inputEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail"
-                   name="requesterEmail"
-                   value="${currentUser.getEmail()}"
-                   readonly>
-        </div>
-        
+<%--        <div class="col-md-11">--%>
+<%--            <label for="inputEmail" class="form-label">Email</label>--%>
+<%--            <input type="email" class="form-control" id="inputEmail"--%>
+<%--                   name="requesterEmail"--%>
+<%--                   value="${currentUser.getEmail()}"--%>
+<%--                   readonly>--%>
+<%--        </div>--%>
+
     </div>
 
     <div class="col-lg-8">

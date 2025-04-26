@@ -17,6 +17,7 @@ public class IndexController {
     public String index(Model model) {
         model.addAttribute("loggedIn", sessionStorage.isLoggedIn());
         model.addAttribute("user", sessionStorage.getUser());
+
         return "redirect:/login";
     }
 }
