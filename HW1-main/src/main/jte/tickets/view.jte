@@ -122,6 +122,10 @@
             <td>Date Submitted:</td>
             <td>${dateFormat.format(ticket.getSubmitDate())}</td>
         </tr>
+        <tr class="table-light">
+            <td>Assigned To:</td>
+            <td>${ticket.getAssignee() != null ? ticket.getAssignee().getName() : "None"}</td>
+        </tr>
         </tbody>
     </table>
 </div>
