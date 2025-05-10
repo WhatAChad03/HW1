@@ -7,6 +7,7 @@ import cs3220stu44.attempt2.model.User;
 import cs3220stu44.attempt2.repository.TicketRepo;
 import cs3220stu44.attempt2.repository.UserRepo;
 import jakarta.annotation.PostConstruct;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -207,38 +208,5 @@ public class TicketController {
         return "redirect:/tickets/" + tixNum;
     }
 
-
-    //show create form
-//    @GetMapping("/tickets/create")
-//    public String create(Model model) {
-//        if(!sessionStorage.isLoggedIn()) {
-//            return "redirect:/";
-//        }
-//        User currentUser = sessionStorage.getUser();
-//        if(currentUser == null) {
-//            return "redirect:/";
-//        }
-//        model.addAttribute("currentUser", currentUser);
-//        return "tickets/create";
-//    }
-//
-//    //creating tix & checking
-//    @PostMapping("/tickets/create")
-//    public String createTix(@RequestParam String category,
-//                            @RequestParam String subject,
-//                            @RequestParam String details,
-//                            Model model) {
-//        if(!sessionStorage.isLoggedIn()) {
-//            return "redirect:/";
-//        }
-//
-//        User requester = sessionStorage.getUser();
-//        model.addAttribute("requester", requester);
-//
-//        Ticket newTicket = new Ticket(ticketRepo.getNextTixNum(), category, subject, details, "Open", new Date(), requester, null);
-//
-//        ticketRepo.save(newTicket);
-//        return "redirect:/tickets";
-//    }
 }
 
